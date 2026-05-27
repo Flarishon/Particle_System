@@ -81,17 +81,17 @@
             this.tbGraviton2.Size = new System.Drawing.Size(241, 45);
             this.tbGraviton2.TabIndex = 4;
             this.tbGraviton2.Value = 100;
-            this.tbGraviton2.Scroll += new System.EventHandler(this.tbGraviton1_Scroll);
+            this.tbGraviton2.Scroll += new System.EventHandler(this.tbGraviton2_Scroll);
             // 
             // tbGraviton1
             // 
-            this.tbGraviton1.Location = new System.Drawing.Point(300, 444);
+            this.tbGraviton1.Location = new System.Drawing.Point(306, 444);
             this.tbGraviton1.Maximum = 100;
             this.tbGraviton1.Name = "tbGraviton1";
             this.tbGraviton1.Size = new System.Drawing.Size(241, 45);
             this.tbGraviton1.TabIndex = 4;
             this.tbGraviton1.Value = 100;
-            this.tbGraviton1.Scroll += new System.EventHandler(this.tbGraviton2_Scroll);
+            this.tbGraviton1.Scroll += new System.EventHandler(this.tbGraviton1_Scroll);
             // 
             // Form1
             // 
