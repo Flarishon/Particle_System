@@ -26,74 +26,83 @@ namespace Particle_System
         }
     }
 
-    public class GravityPoint : IImpactPoint
+    public class TeleportIn : IImpactPoint
     {
-        public int Power = 100;
+        public int Radius = 50;
+        public TeleportOut OutputPoint;
 
         public override void ImpactParticle(Particle particle)
         {
-            float gX = X - particle.X;
-            float gY = Y - particle.Y;
+            if (OutputPoint == null) return;
 
-            double r = Math.Sqrt(gX * gX + gY * gY);
-            if (r + particle.Radius < Power / 2)
+            float dx = X - particle.X;
+            float dy = Y - particle.Y;
+            double distanceToCenter = Math.Sqrt(dx * dx + dy * dy);
+
+            if (distanceToCenter <= Radius + particle.Radius)
             {
-                float r2 = (float)Math.Max(100, gX * gX + gY * gY);
-                particle.SpeedX += gX * Power / r2;
-                particle.SpeedY += gY * Power / r2;
+                float dxToParticle = particle.X - X;
+                float dyToParticle = particle.Y - Y;
+                float angleIn = (float)Math.Atan2(dyToParticle, dxToParticle);
+
+                float speed = (float)Math.Sqrt(particle.SpeedX * particle.SpeedX + particle.SpeedY * particle.SpeedY);
+
+                double rad = OutputPoint.ExitDirection * Math.PI / 180.0;
+                double cos = Math.Cos(rad);
+                double sin = Math.Sin(rad);
+
+                double oldX = particle.SpeedX;
+                double oldY = particle.SpeedY;
+
+                particle.SpeedX = -(float)(oldX * cos - oldY * sin);
+                particle.SpeedY = -(float)(oldX * sin + oldY * cos);
+
+                float newSpeed = (float)Math.Sqrt(particle.SpeedX * particle.SpeedX + particle.SpeedY * particle.SpeedY);
+                if (newSpeed > 0)
+                {
+                    particle.SpeedX = particle.SpeedX / newSpeed * speed;
+                    particle.SpeedY = particle.SpeedY / newSpeed * speed;
+                }
+
+                float angleOut = angleIn + OutputPoint.ExitDirection * (float)(Math.PI / 180.0);
+
+                float radius = Radius;
+                particle.X = OutputPoint.X + radius * (float)Math.Cos(angleOut);
+                particle.Y = OutputPoint.Y + radius * (float)Math.Sin(angleOut);
             }
         }
 
         public override void Render(Graphics g)
         {
             g.DrawEllipse(
-                   new Pen(Color.Red),
-                   X - Power / 2,
-                   Y - Power / 2,
-                   Power,
-                   Power
+                   new Pen(Color.OrangeRed),
+                   X - Radius,
+                   Y - Radius,
+                   Radius * 2,
+                   Radius * 2
                );
-
-            var stringFormat = new StringFormat();
-            stringFormat.Alignment = StringAlignment.Center;
-            stringFormat.LineAlignment = StringAlignment.Center;
-
-            var text = $"Я гравитон\nc силой {Power}";
-            var font = new Font("Verdana", 10);
-
-            var size = g.MeasureString(text, font);
-
-            g.FillRectangle(
-                new SolidBrush(Color.Red),
-                X - size.Width / 2,
-                Y - size.Height / 2,
-                size.Width,
-                size.Height
-            );
-
-            g.DrawString(
-                text,
-                font,
-                new SolidBrush(Color.White),
-                X,
-                Y,
-                stringFormat
-            );
         }
     }
 
-    public class AntiGravityPoint : IImpactPoint
+    public class TeleportOut : IImpactPoint
     {
-        public int Power = 100;
+        public int Radius = 50;
+        public int ExitDirection;
 
         public override void ImpactParticle(Particle particle)
         {
-            float gX = X - particle.X;
-            float gY = Y - particle.Y;
-            float r2 = (float)Math.Max(100, gX * gX + gY * gY);
+            return;
+        }
 
-            particle.SpeedX -= gX * Power / r2;
-            particle.SpeedY -= gY * Power / r2;
+        public override void Render(Graphics g)
+        {
+            g.DrawEllipse(
+                   new Pen(Color.Blue),
+                   X - Radius,
+                   Y - Radius,
+                   Radius * 2,
+                   Radius * 2
+               );
         }
     }
 }

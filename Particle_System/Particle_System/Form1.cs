@@ -17,8 +17,8 @@ namespace Particle_System
         List<Emitter> emitters = new List<Emitter>();
         Emitter emitter;
 
-        GravityPoint point1;
-        GravityPoint point2;
+        TeleportIn teleportIn;
+        TeleportOut teleportOut;
 
         public Form1()
         {
@@ -27,7 +27,7 @@ namespace Particle_System
 
             this.emitter = new Emitter
             {
-                Direction = 0,
+                Direction = 180,
                 Spreading = 10,
                 SpeedMin = 10,
                 SpeedMax = 10,
@@ -35,24 +35,30 @@ namespace Particle_System
                 ColorTo = Color.FromArgb(0, Color.Red),
                 ParticlesPerTick = 10,
                 X = picDisplay.Width / 2,
-                Y = picDisplay.Height / 2,
+                Y = picDisplay.Height / 2 - 150,
             };
 
             emitters.Add(this.emitter);
 
-            point1 = new GravityPoint
+            teleportIn = new TeleportIn
             {
-                X = picDisplay.Width / 2 - 100,
+                X = picDisplay.Width / 2 - 194,
                 Y = picDisplay.Height / 2,
-            };
-            point2 = new GravityPoint
-            {
-                X = picDisplay.Width / 2 + 100,
-                Y = picDisplay.Height / 2,
+                Radius = 50
             };
 
-            emitter.impactPoints.Add(point1);
-            emitter.impactPoints.Add(point2);
+            teleportOut = new TeleportOut
+            {
+                X = picDisplay.Width / 2 + 194,
+                Y = picDisplay.Height / 2,
+                Radius = 50,
+                ExitDirection = 0
+            };
+
+            teleportIn.OutputPoint = teleportOut;
+
+            emitter.impactPoints.Add(teleportIn);
+            emitter.impactPoints.Add(teleportOut);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -62,22 +68,16 @@ namespace Particle_System
             using (var g = Graphics.FromImage(picDisplay.Image))
             {
                 g.Clear(Color.Black);
+
+                using (Pen redPen = new Pen(Color.Red, 2))
+                {
+                    g.DrawLine(redPen, teleportIn.X, teleportIn.Y, teleportOut.X, teleportOut.Y);
+                }
+
                 emitter.Render(g);
             }
 
             picDisplay.Invalidate();
-        }
-
-        private void picDisplay_MouseMove(object sender, MouseEventArgs e)
-        {
-            foreach (var emitter in emitters)
-            {
-                emitter.MousePositionX = e.X;
-                emitter.MousePositionY = e.Y;
-            }
-
-            // point2.X = e.X;
-            // point2.Y = e.Y;
         }
 
         private void tbDirection_Scroll(object sender, EventArgs e)
@@ -86,15 +86,30 @@ namespace Particle_System
             lblDirection.Text = $"{tbDirection.Value}°";
         }
 
-        private void tbGraviton1_Scroll(object sender, EventArgs e)
+        private void tbTeleportRadius_Scroll(object sender, EventArgs e)
         {
-            point1.Power = tbGraviton1.Value;
+            teleportIn.Radius = tbTeleportRadius.Value;
+            teleportOut.Radius = tbTeleportRadius.Value;
         }
 
-        private void tbGraviton2_Scroll(object sender, EventArgs e)
+        private void tbExitDirection_Scroll(object sender, EventArgs e)
         {
-            point2.Power = tbGraviton2.Value;
+            teleportOut.ExitDirection = tbExitDirection.Value;
         }
 
+        private void picDisplay_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                teleportIn.X = e.X;
+                teleportIn.Y = e.Y;
+            }
+
+            else if (e.Button == MouseButtons.Right)
+            {
+                teleportOut.X = e.X;
+                teleportOut.Y = e.Y;
+            }
+        }
     }
 }
