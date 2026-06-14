@@ -22,6 +22,8 @@ namespace Particle_System
 
         DotCounter dotCounter;
 
+        Radar radar;
+
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +31,9 @@ namespace Particle_System
 
             this.KeyPreview = true;
             this.KeyDown += Form1_KeyDown;
+
+            this.picDisplay.MouseMove += PicDisplay_MouseMove;
+            picDisplay.MouseWheel += picDisplay_MouseWheel;
 
             this.emitter = new Emitter
             {
@@ -67,12 +72,22 @@ namespace Particle_System
                 Radius = 50
             };
 
+            radar = new Radar
+            {
+                X = picDisplay.Width / 2,
+                Y = picDisplay.Height / 2,
+                Radius = 50
+            };
+
             teleportIn.OutputPoint = teleportOut;
 
             emitter.impactPoints.Add(teleportIn);
             emitter.impactPoints.Add(teleportOut);
 
             emitter.impactPoints.Add(dotCounter);
+
+            emitter.impactPoints.Add(radar);
+
 
             lblDirection.Text = $"{tbDirection.Value}°";
         }
@@ -148,6 +163,24 @@ namespace Particle_System
                 }
 
                 e.Handled = true;
+            }
+        }
+
+        private void PicDisplay_MouseMove(object sender, MouseEventArgs e)
+        {
+            radar.X = e.X;
+            radar.Y = e.Y;
+        }
+
+        private void picDisplay_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                radar.Radius += 5;
+            }
+            else if (e.Delta < 0)
+            {
+                radar.Radius -= 5;
             }
         }
     }

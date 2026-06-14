@@ -18,6 +18,8 @@ namespace Particle_System
 
         public float Life;
 
+        public bool inRadar = false;
+
         public static Random rand = new Random();
 
         public Particle()
@@ -64,14 +66,29 @@ namespace Particle_System
 
         public override void Draw(Graphics g)
         {
-            float k = Math.Min(1f, Life / 100);
+            if (Life > 0)
+            {
+                float k = Math.Min(1f, Life / 100);
 
-            var color = MixColor(ToColor, FromColor, k);
-            var b = new SolidBrush(color);
+                Color color;
 
-            g.FillEllipse(b, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+                if (inRadar)
+                {
+                    color = MixColor(Color.Lime, Color.Lime, k);
 
-            b.Dispose();
+                }
+                else
+                {
+                    color = MixColor(ToColor, FromColor, k);
+
+                }
+
+                var b = new SolidBrush(color);
+
+                g.FillEllipse(b, X - Radius, Y - Radius, Radius * 2, Radius * 2);
+
+                b.Dispose();
+            }
         }
     }
 }

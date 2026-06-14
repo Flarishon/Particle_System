@@ -156,4 +156,53 @@ namespace Particle_System
                 );
         }
     }
+
+    public class Radar : IImpactPoint
+    {
+        public int Radius = 50;
+        private int counterInRadar = 0;
+
+        public override void ImpactParticle(Particle particle)
+        {
+            float dx = X - particle.X;
+            float dy = Y - particle.Y;
+            double distanceToCenter = Math.Sqrt(dx * dx + dy * dy);
+
+            if (distanceToCenter <= Radius + particle.Radius)
+            {
+                counterInRadar++;
+                particle.inRadar = true;
+            }
+            else
+            {
+                particle.inRadar = false;
+            }
+        }
+
+        public override void Render(Graphics g)
+        {
+            g.DrawEllipse(
+                   new Pen(Color.Lime),
+                   X - Radius,
+                   Y - Radius,
+                   Radius * 2,
+                   Radius * 2
+               );
+
+            var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+
+            g.DrawString(
+                   $"{counterInRadar}",
+                   new Font("Verdana", 10),
+                   new SolidBrush(Color.White),
+                   X,
+                   Y,
+                   stringFormat
+                );
+
+            counterInRadar = 0;
+        }
+    }
 }
