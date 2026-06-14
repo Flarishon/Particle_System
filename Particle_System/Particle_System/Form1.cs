@@ -20,10 +20,15 @@ namespace Particle_System
         TeleportIn teleportIn;
         TeleportOut teleportOut;
 
+        DotCounter dotCounter;
+
         public Form1()
         {
             InitializeComponent();
             picDisplay.Image = new Bitmap(picDisplay.Width, picDisplay.Height);
+
+            this.KeyPreview = true;
+            this.KeyDown += Form1_KeyDown;
 
             this.emitter = new Emitter
             {
@@ -42,23 +47,34 @@ namespace Particle_System
 
             teleportIn = new TeleportIn
             {
-                X = picDisplay.Width / 2 - 194,
+                X = picDisplay.Width / 2 - picDisplay.Width / 4,
                 Y = picDisplay.Height / 2,
                 Radius = 50
             };
 
             teleportOut = new TeleportOut
             {
-                X = picDisplay.Width / 2 + 194,
+                X = picDisplay.Width / 2 + picDisplay.Width / 4,
                 Y = picDisplay.Height / 2,
                 Radius = 50,
                 ExitDirection = 0
+            };
+
+            dotCounter = new DotCounter
+            {
+                X = picDisplay.Width / 2,
+                Y = picDisplay.Height / 4 + picDisplay.Height / 2,
+                Radius = 50
             };
 
             teleportIn.OutputPoint = teleportOut;
 
             emitter.impactPoints.Add(teleportIn);
             emitter.impactPoints.Add(teleportOut);
+
+            emitter.impactPoints.Add(dotCounter);
+
+            lblDirection.Text = $"{tbDirection.Value}°";
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -109,6 +125,29 @@ namespace Particle_System
             {
                 teleportOut.X = e.X;
                 teleportOut.Y = e.Y;
+            }
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+            {
+                Point cursorPos = picDisplay.PointToClient(Cursor.Position);
+
+                if (cursorPos.X >= 0 && cursorPos.X <= picDisplay.Width &&
+                    cursorPos.Y >= 0 && cursorPos.Y <= picDisplay.Height)
+                {
+                    DotCounter newDotCounter = new DotCounter
+                    {
+                        X = cursorPos.X,
+                        Y = cursorPos.Y,
+                        Radius = 50
+                    };
+
+                    emitter.impactPoints.Add(newDotCounter);
+                }
+
+                e.Handled = true;
             }
         }
     }

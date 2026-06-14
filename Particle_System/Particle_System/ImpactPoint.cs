@@ -105,4 +105,55 @@ namespace Particle_System
                );
         }
     }
+
+    public class DotCounter : IImpactPoint
+    {
+        public int Radius = 50;
+        private int particleCount = 0;
+
+        public override void ImpactParticle(Particle particle)
+        {
+            float dx = X - particle.X;
+            float dy = Y - particle.Y;
+            double distanceToCenter = Math.Sqrt(dx * dx + dy * dy);
+
+            if (distanceToCenter <= Radius + particle.Radius)
+            {
+                particle.Life = 0;
+                particleCount++;
+            }
+        }
+
+        public override void Render(Graphics g)
+        {
+            g.DrawEllipse(
+                   new Pen(Color.Red),
+                   X - Radius,
+                   Y - Radius,
+                   Radius * 2,
+                   Radius * 2
+               );
+
+            g.FillEllipse(
+                   new SolidBrush(Color.FromArgb(187, 63, 63)),
+                   X - Radius,
+                   Y - Radius,
+                   Radius * 2,
+                   Radius * 2
+                );
+
+            var stringFormat = new StringFormat();
+            stringFormat.Alignment = StringAlignment.Center;
+            stringFormat.LineAlignment = StringAlignment.Center;
+
+            g.DrawString(
+                   $"{particleCount}",
+                   new Font("Verdana", 10),
+                   new SolidBrush(Color.Black),
+                   X,
+                   Y,
+                   stringFormat
+                );
+        }
+    }
 }

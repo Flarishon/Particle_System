@@ -35,6 +35,9 @@
             this.lblDirection = new System.Windows.Forms.Label();
             this.tbExitDirection = new System.Windows.Forms.TrackBar();
             this.tbTeleportRadius = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picDisplay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbDirection)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbExitDirection)).BeginInit();
@@ -63,6 +66,7 @@
             this.tbDirection.Name = "tbDirection";
             this.tbDirection.Size = new System.Drawing.Size(263, 45);
             this.tbDirection.TabIndex = 1;
+            this.tbDirection.Value = 180;
             this.tbDirection.Scroll += new System.EventHandler(this.tbDirection_Scroll);
             // 
             // lblDirection
@@ -92,11 +96,41 @@
             this.tbTeleportRadius.Value = 50;
             this.tbTeleportRadius.Scroll += new System.EventHandler(this.tbTeleportRadius_Scroll);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(21, 492);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(245, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Угол направления выхода частиц из Эмиттера";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(377, 492);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(98, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Радиус телепорта";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(579, 492);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(179, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Угол выхода частиц из телепорта";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 497);
+            this.ClientSize = new System.Drawing.Size(800, 544);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.tbTeleportRadius);
             this.Controls.Add(this.tbExitDirection);
             this.Controls.Add(this.lblDirection);
@@ -104,6 +138,7 @@
             this.Controls.Add(this.picDisplay);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.picDisplay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbDirection)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbExitDirection)).EndInit();
@@ -121,6 +156,9 @@
         private System.Windows.Forms.Label lblDirection;
         private System.Windows.Forms.TrackBar tbExitDirection;
         private System.Windows.Forms.TrackBar tbTeleportRadius;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 
